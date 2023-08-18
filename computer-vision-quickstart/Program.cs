@@ -24,10 +24,8 @@ namespace ComputerVisionQuickstart
        // .Build();
 
         // Add your Computer Vision key and endpoint
-       // static string key = Environment.GetEnvironmentVariable("VISION_KEY");
-        static string key = "";
-        //static string endpoint = Environment.GetEnvironmentVariable("VISION_ENDPOINT");
-        static string endpoint = "";
+        static string key = Environment.GetEnvironmentVariable("VISION_KEY");
+        static string endpoint = Environment.GetEnvironmentVariable("VISION_ENDPOINT");
         private const string READ_TEXT_URL_IMAGE = "https://raw.githubusercontent.com/Azure-Samples/cognitive-services-sample-data-files/master/ComputerVision/Images/printed_text.jpg";
         static void Main(string[] args)
         {
