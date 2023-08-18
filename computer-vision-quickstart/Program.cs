@@ -25,11 +25,10 @@ namespace ComputerVisionQuickstart
 
         // Add your Computer Vision key and endpoint
        // static string key = Environment.GetEnvironmentVariable("VISION_KEY");
-        static string key = "141e02f60ac14811acb067f59ad60f53";
+        static string key = "";
         //static string endpoint = Environment.GetEnvironmentVariable("VISION_ENDPOINT");
-        static string endpoint = "https://sdlcomputervision.cognitiveservices.azure.com/";
+        static string endpoint = "";
         private const string READ_TEXT_URL_IMAGE = "https://raw.githubusercontent.com/Azure-Samples/cognitive-services-sample-data-files/master/ComputerVision/Images/printed_text.jpg";
-
         static void Main(string[] args)
         {
             Console.WriteLine("Azure Cognitive Services Computer Vision - .NET quickstart example");
