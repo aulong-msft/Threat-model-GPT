@@ -38,9 +38,21 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "Azure.AI.OpenAI": {
+              "target": "Package",
+              "version": "[1.0.0-beta.6, )"
+            },
+            "DotNetEnv": {
+              "target": "Package",
+              "version": "[2.5.0, )"
+            },
             "Microsoft.Azure.CognitiveServices.Vision.ComputerVision": {
               "target": "Package",
               "version": "[7.0.0, )"
+            },
+            "OpenAI": {
+              "target": "Package",
+              "version": "[1.7.2, )"
             }
           },
           "imports": [
@@ -59,7 +71,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.307\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
         }
       }
     }
