@@ -13,14 +13,6 @@ namespace ThreatModelGPT
 {
     class Program
     {
-
-        // Global Variables
-        static string endpoint = "https://sdlcomputervision.cognitiveservices.azure.com/";
-        private static string imageFilePath = "C:/Users/aulong/GitHub_Projects/Threat-model-GPT/photos/artimis.png";
-
-        static string openAiApiKey = "d762eac8c0da477c90af0a25aa03b4e8";
-        static string openAiApiendpoint = "https://audreysopenai.openai.azure.com/";
-
         static async Task Main(string[] args)
         {
             // Load environment variables from .env file
