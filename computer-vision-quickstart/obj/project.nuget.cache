@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "U8iDc0OyMeAVpbOEI0J6FJspbj7bAsid3f4XuNRo01qwcc9qVng+RnC80YA5qiaN00N8Aj2nELtBwsrSA5N4hA==",
+  "dgSpecHash": "IMhGyGR1f2NybehDumqgpclLYRAF3oAy0TS5WJm7/l3tNqUW+Qo9182lMx3duDS0dYw81lBjFhH4UBMcdid1fA==",
   "success": true,
   "projectFilePath": "C:\\Users\\aulong\\GitHub_Projects\\Threat-model-GPT\\computer-vision-quickstart\\computer-vision-quickstart.csproj",
   "expectedPackageFiles": [
@@ -25,6 +25,7 @@
     "C:\\Users\\aulong\\.nuget\\packages\\microsoft.win32.primitives\\4.3.0\\microsoft.win32.primitives.4.3.0.nupkg.sha512",
     "C:\\Users\\aulong\\.nuget\\packages\\netstandard.library\\1.6.1\\netstandard.library.1.6.1.nupkg.sha512",
     "C:\\Users\\aulong\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\aulong\\.nuget\\packages\\octokit\\7.1.0\\octokit.7.1.0.nupkg.sha512",
     "C:\\Users\\aulong\\.nuget\\packages\\openai\\1.7.2\\openai.1.7.2.nupkg.sha512",
     "C:\\Users\\aulong\\.nuget\\packages\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",
     "C:\\Users\\aulong\\.nuget\\packages\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",

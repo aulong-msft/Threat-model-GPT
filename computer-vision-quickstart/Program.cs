@@ -1,14 +1,15 @@
-﻿
+﻿using Azure;
+using Azure.AI.OpenAI;
+using DotNetEnv;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
-using Azure;
-using Azure.AI.OpenAI;
-using static System.Environment;
+using Octokit;
 using System;
+
 using System.Collections.Generic;
-using DotNetEnv;
+using static System.Environment;
+using System.Text;
 using System.Threading.Tasks;
-using Azure.AI.OpenAI;
 
 namespace ThreatModelGPT
 {
@@ -18,15 +19,17 @@ namespace ThreatModelGPT
         {
             // Load environment variables from .env file
             Env.Load();
+            
             // Assign values from environment variables
             string openAiApiKey = Env.GetString("OPENAI_API_KEY");
             string openAiApiendpoint = Env.GetString("OPENAI_API_ENDPOINT");
             string computerVisionApiKey = Env.GetString("COMPUTER_VISION_API_KEY");
             string computerVisionApiEndpoint = Env.GetString("COMPUTER_VISION_API_ENDPOINT");
             string imageFilePath = Env.GetString("IMAGE_FILEPATH");
+            string githubUsername = Env.GetString("GITHUB_USERNAME");
+            string githubPersonalAccessToken = Env.GetString("GITHUB_PERSONAL_ACCESS_TOKEN");
   
-
-            Console.WriteLine("Azure Cognitive Services Computer Vision - .NET quickstart example");
+            // Create a computer vision client to obtain text from a provided image
             ComputerVisionClient client = Authenticate(computerVisionApiEndpoint, computerVisionApiKey);
 
             // Extract text (OCR) from the provided local image file
@@ -35,10 +38,19 @@ namespace ThreatModelGPT
             Console.WriteLine("Extracted Text from Image:");
             Console.WriteLine(extractedText);
 
-            // Use OpenAI API to generate recommendations from the extracted text
+            // Use OpenAI API to generate intelligible keywords from the extracted text
             var listOfServices = await GenerateListOfServices(extractedText, openAiApiKey, openAiApiendpoint);
+
+            // Use OpenAI API to generate recommendations from the extracted text
             string concatenatedString = string.Join(" ", listOfServices); // Using a space as delimiter
-            var recommendations = await GenerateListOfSecurityRecommendations(concatenatedString, openAiApiKey, openAiApiendpoint);
+           // var recommendations = await GenerateListOfSecurityRecommendations(concatenatedString, openAiApiKey, openAiApiendpoint);
+
+            List<string> securityBaselines = await GetSecurityBaselinesAsync(listOfServices, githubUsername, githubPersonalAccessToken);
+            
+            foreach (string baseline in securityBaselines)
+            {
+                Console.WriteLine("SECURITY BASELINE FOR:" + baseline);
+            }
         }
 
         public static ComputerVisionClient Authenticate(string endpoint, string key)
@@ -99,7 +111,7 @@ namespace ThreatModelGPT
         {
             string engine = "text-davinci-003";
             List<string> recommendations = new List<string>(); // Initialize the list
-            string prompt = $"Prompt 1: You are a Microsoft Azure security engineer doing threat model analysis to identify and mitigate risk. Given the following text:\n{text}\n please find the keywords relevant to an Azure security engineer and print them out. \n";
+            string prompt = $"Prompt 1: You are a Microsoft Azure security engineer doing threat model analysis to identify and mitigate risk. Given the following text:\n{text}\n please find the relevant Azure Services and print them out. \n";
 
 
             OpenAIClient client = new OpenAIClient(new Uri(apiEndpoint), new AzureKeyCredential(apiKey));
@@ -130,8 +142,8 @@ namespace ThreatModelGPT
                     Console.Write($"Input: {prompt}");
                     CompletionsOptions completionsOptions = new CompletionsOptions();
                     completionsOptions.Prompts.Add(prompt);
-                    completionsOptions.MaxTokens = 500;
-                    completionsOptions.Temperature = 0.2f;
+                    completionsOptions.MaxTokens = 1000;
+                    completionsOptions.Temperature = 0.1f;
 
                     Response<Completions> completionsResponse = client.GetCompletions(engine, completionsOptions);
                     string completion = completionsResponse.Value.Choices[0].Text;
@@ -140,7 +152,51 @@ namespace ThreatModelGPT
 
             return recommendations; // Return the list
         }
+        static async Task<List<string>> GetSecurityBaselinesAsync(List<string> services, string username, string personalAccessToken)
+        {
+            string owner = "MicrosoftDocs";
+            string repo = "SecurityBenchmarks";
+            string path = "Azure Offer Security Baselines/3.0";
 
+            var client = new GitHubClient(new ProductHeaderValue("MyApp"));
+            var basicAuth = new Credentials(username, personalAccessToken); // Replace with your GitHub username and token
+            client.Credentials = basicAuth;
 
-    }
+            List<string> securityBaselines = new List<string>();
+
+            foreach (string service in services)
+            {
+                try
+                {
+                    string content = await GetFileContentAsync(client, owner, repo, path, service);
+                    securityBaselines.Add(content);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to fetch data for service: {service}, Error: {ex.Message}");
+                }
+            }
+
+            return securityBaselines;
+        }
+
+        static async Task<string> GetFileContentAsync(GitHubClient client, string owner, string repo, string path, string service)
+        {
+            var contents = await client.Repository.Content.GetAllContentsByRef(owner, repo, path, "master");
+            var serviceFile = contents.FirstOrDefault(c => c.Name.Equals($"{service}.md", StringComparison.OrdinalIgnoreCase));
+
+            if (serviceFile != null)
+            {
+                var rawContent = await client.Repository.Content.GetRawContent(owner, repo, serviceFile.Path);
+
+                // Convert byte array to string using UTF-8 encoding
+                string content = Encoding.UTF8.GetString(rawContent);
+
+                return content;
+            }
+
+            return $"Content not found for service: {service}";
+        }
+  
+    }     
 }

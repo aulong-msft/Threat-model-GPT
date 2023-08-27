@@ -50,6 +50,10 @@
               "target": "Package",
               "version": "[7.0.0, )"
             },
+            "Octokit": {
+              "target": "Package",
+              "version": "[7.1.0, )"
+            },
             "OpenAI": {
               "target": "Package",
               "version": "[1.7.2, )"

@@ -354,6 +354,19 @@
           }
         }
       },
+      "Octokit/7.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Octokit.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Octokit.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "OpenAI/1.7.2": {
         "type": "package",
         "dependencies": {
@@ -2033,6 +2046,20 @@
         "newtonsoft.json.13.0.3.nupkg.sha512",
         "newtonsoft.json.nuspec",
         "packageIcon.png"
+      ]
+    },
+    "Octokit/7.1.0": {
+      "sha512": "v2qhKBe1Zlssa4XOmpOXNDFBrOAMw2tBmr8L8YMSrEi+PlF/L/PboZcXHSkZuhIxIeOGxEFiwkuJLkvG4aHNHQ==",
+      "type": "package",
+      "path": "octokit/7.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/Octokit.dll",
+        "lib/netstandard2.0/Octokit.xml",
+        "octokit.7.1.0.nupkg.sha512",
+        "octokit.nuspec",
+        "octokit.png"
       ]
     },
     "OpenAI/1.7.2": {
@@ -5442,6 +5469,7 @@
       "Azure.AI.OpenAI >= 1.0.0-beta.6",
       "DotNetEnv >= 2.5.0",
       "Microsoft.Azure.CognitiveServices.Vision.ComputerVision >= 7.0.0",
+      "Octokit >= 7.1.0",
       "OpenAI >= 1.7.2"
     ]
   },
@@ -5493,6 +5521,10 @@
           "Microsoft.Azure.CognitiveServices.Vision.ComputerVision": {
             "target": "Package",
             "version": "[7.0.0, )"
+          },
+          "Octokit": {
+            "target": "Package",
+            "version": "[7.1.0, )"
           },
           "OpenAI": {
             "target": "Package",
