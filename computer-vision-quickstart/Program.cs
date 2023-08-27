@@ -36,13 +36,9 @@ namespace ThreatModelGPT
             Console.WriteLine(extractedText);
 
             // Use OpenAI API to generate recommendations from the extracted text
-            var recommendations = await GenerateOpenAIRecommendations(extractedText, openAiApiKey, openAiApiendpoint);
-
-          /*  Console.WriteLine("Recommended Actions:");
-            foreach (var recommendation in recommendations)
-            {
-                Console.WriteLine(recommendation);
-            }*/
+            var listOfServices = await GenerateListOfServices(extractedText, openAiApiKey, openAiApiendpoint);
+            string concatenatedString = string.Join(" ", listOfServices); // Using a space as delimiter
+            var recommendations = await GenerateListOfSecurityRecommendations(concatenatedString, openAiApiKey, openAiApiendpoint);
         }
 
         public static ComputerVisionClient Authenticate(string endpoint, string key)
@@ -99,40 +95,52 @@ namespace ThreatModelGPT
             return extractedText;
         }
 
-       public static async Task<List<string>> GenerateOpenAIRecommendations(string text, string apiKey, string apiEndpoint)
+       public static async Task<List<string>> GenerateListOfServices(string text, string apiKey, string apiEndpoint)
         {
             string engine = "text-davinci-003";
             List<string> recommendations = new List<string>(); // Initialize the list
-            List<string> prompts = new(){
-                $"Prompt 1: You are a Microsoft security engineer doing threat model analysis to identity and mitigate risk. Given the following text:\n{text}\n please find the keywords relevant to a security engineer and print them out. \n",
-                $"Prompt 2: Enumerate the results from the previous prompt. \n"
+            string prompt = $"Prompt 1: You are a Microsoft Azure security engineer doing threat model analysis to identify and mitigate risk. Given the following text:\n{text}\n please find the keywords relevant to an Azure security engineer and print them out. \n";
 
-            };
 
             OpenAIClient client = new OpenAIClient(new Uri(apiEndpoint), new AzureKeyCredential(apiKey));
 
-            foreach (string prompt in prompts)
-            {
-                Console.Write($"Input: {prompt}");
-                CompletionsOptions completionsOptions = new CompletionsOptions();
-                completionsOptions.Prompts.Add(prompt);
-                completionsOptions.MaxTokens = 500;
-                completionsOptions.Temperature = 0.2f;
+                    Console.Write($"Input: {prompt}");
+                    CompletionsOptions completionsOptions = new CompletionsOptions();
+                    completionsOptions.Prompts.Add(prompt);
+                    completionsOptions.MaxTokens = 500;
+                    completionsOptions.Temperature = 0.2f;
 
-                Response<Completions> completionsResponse = client.GetCompletions(engine, completionsOptions);
-                string completion = completionsResponse.Value.Choices[0].Text;
-                Console.WriteLine($"Chatbot: {completion}");
-                recommendations.Add(completion); // Add the completion to the list
-
-            }
-        //    Response<Completions> completionsResponse = await client.GetCompletionsAsync(engine, completionsOptions);
-
-           // string completion = completionsResponse.Value.Choices[0].Text;
-           // Console.WriteLine($"Chatbot: {completion}");
-
-           // recommendations.Add(completion); // Add the completion to the list
+                    Response<Completions> completionsResponse = client.GetCompletions(engine, completionsOptions);
+                    string completion = completionsResponse.Value.Choices[0].Text;
+                    Console.WriteLine($"Chatbot: {completion}");
+                    recommendations.Add(completion); // Add the completion to the list
 
             return recommendations; // Return the list
         }
+
+       public static async Task<List<string>> GenerateListOfSecurityRecommendations(string text, string apiKey, string apiEndpoint)
+        {
+            string engine = "text-davinci-003";
+            List<string> recommendations = new List<string>(); // Initialize the list
+            string prompt = $"Prompt 2: You are a Microsoft Azure security engineer doing threat model analysis to identify and mitigate risk. Given the following text:\n{text}\n please find the appropriate actionable security practices tailored to each service mentioned in the text and give 4-5 mitigations for each service  \n";
+
+
+            OpenAIClient client = new OpenAIClient(new Uri(apiEndpoint), new AzureKeyCredential(apiKey));
+
+                    Console.Write($"Input: {prompt}");
+                    CompletionsOptions completionsOptions = new CompletionsOptions();
+                    completionsOptions.Prompts.Add(prompt);
+                    completionsOptions.MaxTokens = 500;
+                    completionsOptions.Temperature = 0.2f;
+
+                    Response<Completions> completionsResponse = client.GetCompletions(engine, completionsOptions);
+                    string completion = completionsResponse.Value.Choices[0].Text;
+                    Console.WriteLine($"Chatbot: {completion}");
+                    recommendations.Add(completion); // Add the completion to the list
+
+            return recommendations; // Return the list
+        }
+
+
     }
 }
