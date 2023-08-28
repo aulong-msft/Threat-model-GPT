@@ -42,13 +42,16 @@ namespace ThreatModelGPT
 
             // Use OpenAI API to generate recommendations from the extracted text
             string concatenatedString = string.Join(",", listOfServices); // Using a space as delimiter
-           // var recommendations = await GenerateListOfSecurityRecommendations(concatenatedString, openAiApiKey, openAiApiendpoint);
+            var recommendations = await GenerateListOfSecurityRecommendations(concatenatedString, openAiApiKey, openAiApiendpoint);
 
             List<string> securityBaselines = await GetSecurityBaselinesAsync(concatenatedString, githubUsername, githubPersonalAccessToken);
             
             foreach (string baseline in securityBaselines)
             {
-                Console.WriteLine("SECURITY BASELINE FOR:" + baseline);
+                if (!string.IsNullOrWhiteSpace(baseline)) // Check if the baseline is not null, empty, or whitespace
+                {
+                    Console.WriteLine("SECURITY BASELINE FOR:" + baseline);
+                }
             }
         }
 
@@ -186,29 +189,26 @@ namespace ThreatModelGPT
         {
             var contents = await client.Repository.Content.GetAllContentsByRef(owner, repo, path, "master");
             
-            Console.WriteLine($"Searching for service: {service}");
+          //  Console.WriteLine($"Searching for service: {service}");
             
             foreach (var content in contents)
             {
-                Console.WriteLine($"Checking file: {content.Name}");
+               // Console.WriteLine($"Checking file: {content.Name}");
+
+                // Replace spaces with hyphens to match filename format
+                string formattedService = service.Replace(" ", "-");
                 
-                if (content.Name.IndexOf(service, StringComparison.OrdinalIgnoreCase) >= 0)
+                if (content.Name.IndexOf(formattedService, StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    var rawContent = await client.Repository.Content.GetRawContent(owner, repo, content.Path);
+                    // Construct the URL to the baseline file
+                    string baselineUrl = $" {service}  -   https://github.com/{owner}/{repo}/blob/master/{content.Path}";
 
-                    // Convert byte array to string using UTF-8 encoding
-                    string contentText = Encoding.UTF8.GetString(rawContent);
-
-                    return contentText;
+                    return baselineUrl;
                 }
             }
 
-            return $"Content not found for service: {service}";
+           // return $"Baseline not found for service: {service}";
+           return "";
         }
-
-
-
-
-  
-    }     
-}
+    }
+}     

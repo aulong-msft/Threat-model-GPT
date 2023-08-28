@@ -46,6 +46,10 @@
               "target": "Package",
               "version": "[2.5.0, )"
             },
+            "FuzzyStringMatch": {
+              "target": "Package",
+              "version": "[1.0.3, )"
+            },
             "Microsoft.Azure.CognitiveServices.Vision.ComputerVision": {
               "target": "Package",
               "version": "[7.0.0, )"

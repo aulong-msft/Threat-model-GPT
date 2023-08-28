@@ -56,6 +56,15 @@
           "lib/netstandard1.3/DotNetEnv.dll": {}
         }
       },
+      "FuzzyStringMatch/1.0.3": {
+        "type": "package",
+        "compile": {
+          "lib/Fuzzy.dll": {}
+        },
+        "runtime": {
+          "lib/Fuzzy.dll": {}
+        }
+      },
       "Microsoft.Azure.CognitiveServices.Vision.ComputerVision/7.0.0": {
         "type": "package",
         "dependencies": {
@@ -1736,6 +1745,18 @@
         "dotnetenv.2.5.0.nupkg.sha512",
         "dotnetenv.nuspec",
         "lib/netstandard1.3/DotNetEnv.dll"
+      ]
+    },
+    "FuzzyStringMatch/1.0.3": {
+      "sha512": "+O3gz6j0jZKET9GbN5Byr9df1kWQXQ7pzz79c/82FnfejCcP/bcC+5tDV1O9JTjEoCKu0f8Ivb+sBwqaAG1ulQ==",
+      "type": "package",
+      "path": "fuzzystringmatch/1.0.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "fuzzystringmatch.1.0.3.nupkg.sha512",
+        "fuzzystringmatch.nuspec",
+        "lib/Fuzzy.dll"
       ]
     },
     "Microsoft.Azure.CognitiveServices.Vision.ComputerVision/7.0.0": {
@@ -5468,6 +5489,7 @@
     "net7.0": [
       "Azure.AI.OpenAI >= 1.0.0-beta.6",
       "DotNetEnv >= 2.5.0",
+      "FuzzyStringMatch >= 1.0.3",
       "Microsoft.Azure.CognitiveServices.Vision.ComputerVision >= 7.0.0",
       "Octokit >= 7.1.0",
       "OpenAI >= 1.7.2"
@@ -5518,6 +5540,10 @@
             "target": "Package",
             "version": "[2.5.0, )"
           },
+          "FuzzyStringMatch": {
+            "target": "Package",
+            "version": "[1.0.3, )"
+          },
           "Microsoft.Azure.CognitiveServices.Vision.ComputerVision": {
             "target": "Package",
             "version": "[7.0.0, )"
@@ -5550,5 +5576,17 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'FuzzyStringMatch 1.0.3' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "FuzzyStringMatch",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
 }

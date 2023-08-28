@@ -10,6 +10,7 @@
         "dependencies": {
           "Azure.AI.OpenAI": "1.0.0-beta.6",
           "DotNetEnv": "2.5.0",
+          "FuzzyStringMatch": "1.0.3",
           "Microsoft.Azure.CognitiveServices.Vision.ComputerVision": "7.0.0",
           "Octokit": "7.1.0",
           "OpenAI": "1.7.2"
@@ -58,6 +59,14 @@
           "lib/netstandard1.3/DotNetEnv.dll": {
             "assemblyVersion": "2.5.0.0",
             "fileVersion": "2.5.0.0"
+          }
+        }
+      },
+      "FuzzyStringMatch/1.0.3": {
+        "runtime": {
+          "lib/Fuzzy.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       },
@@ -958,6 +967,13 @@
       "sha512": "sha512-BjRAEr3fBXo0+1rbC5Z1NTcYH2z+qnjROXKisR78VtL87UAlseelvg0N3aMAk5Bexuph13IKEmxVk5b9CrpdWw==",
       "path": "dotnetenv/2.5.0",
       "hashPath": "dotnetenv.2.5.0.nupkg.sha512"
+    },
+    "FuzzyStringMatch/1.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+O3gz6j0jZKET9GbN5Byr9df1kWQXQ7pzz79c/82FnfejCcP/bcC+5tDV1O9JTjEoCKu0f8Ivb+sBwqaAG1ulQ==",
+      "path": "fuzzystringmatch/1.0.3",
+      "hashPath": "fuzzystringmatch.1.0.3.nupkg.sha512"
     },
     "Microsoft.Azure.CognitiveServices.Vision.ComputerVision/7.0.0": {
       "type": "package",
