@@ -5,7 +5,6 @@ using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
 using Octokit;
 using System;
-
 using System.Collections.Generic;
 using static System.Environment;
 using System.Text;
@@ -42,10 +41,10 @@ namespace ThreatModelGPT
             var listOfServices = await GenerateListOfServices(extractedText, openAiApiKey, openAiApiendpoint);
 
             // Use OpenAI API to generate recommendations from the extracted text
-            string concatenatedString = string.Join(" ", listOfServices); // Using a space as delimiter
+            string concatenatedString = string.Join(",", listOfServices); // Using a space as delimiter
            // var recommendations = await GenerateListOfSecurityRecommendations(concatenatedString, openAiApiKey, openAiApiendpoint);
 
-            List<string> securityBaselines = await GetSecurityBaselinesAsync(listOfServices, githubUsername, githubPersonalAccessToken);
+            List<string> securityBaselines = await GetSecurityBaselinesAsync(concatenatedString, githubUsername, githubPersonalAccessToken);
             
             foreach (string baseline in securityBaselines)
             {
@@ -97,6 +96,7 @@ namespace ThreatModelGPT
             var extractedText = "";
             Console.WriteLine();
             var textUrlFileResults = results.AnalyzeResult.ReadResults;
+            
             foreach (ReadResult page in textUrlFileResults)
             {
                 foreach (Line line in page.Lines)
@@ -152,51 +152,63 @@ namespace ThreatModelGPT
 
             return recommendations; // Return the list
         }
-        static async Task<List<string>> GetSecurityBaselinesAsync(List<string> services, string username, string personalAccessToken)
+        static async Task<List<string>> GetSecurityBaselinesAsync(string services, string username, string personalAccessToken)
         {
             string owner = "MicrosoftDocs";
             string repo = "SecurityBenchmarks";
             string path = "Azure Offer Security Baselines/3.0";
 
             var client = new GitHubClient(new ProductHeaderValue("MyApp"));
-            var basicAuth = new Credentials(username, personalAccessToken); // Replace with your GitHub username and token
+            var basicAuth = new Credentials(username, personalAccessToken); 
             client.Credentials = basicAuth;
 
             List<string> securityBaselines = new List<string>();
+            string[] individualServices = services.Split(',').Select(s => s.Trim()).ToArray();
 
-            foreach (string service in services)
+            foreach (string individualService in individualServices)
             {
                 try
                 {
-                    string content = await GetFileContentAsync(client, owner, repo, path, service);
+                    string trimmedService = individualService.Trim();
+                    string content = await GetFileContentAsync(client, owner, repo, path, trimmedService);
                     securityBaselines.Add(content);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to fetch data for service: {service}, Error: {ex.Message}");
+                    Console.WriteLine($"Failed to fetch data for service: {individualService}, Error: {ex.Message}");
                 }
             }
 
             return securityBaselines;
         }
-
+                
         static async Task<string> GetFileContentAsync(GitHubClient client, string owner, string repo, string path, string service)
         {
             var contents = await client.Repository.Content.GetAllContentsByRef(owner, repo, path, "master");
-            var serviceFile = contents.FirstOrDefault(c => c.Name.Equals($"{service}.md", StringComparison.OrdinalIgnoreCase));
-
-            if (serviceFile != null)
+            
+            Console.WriteLine($"Searching for service: {service}");
+            
+            foreach (var content in contents)
             {
-                var rawContent = await client.Repository.Content.GetRawContent(owner, repo, serviceFile.Path);
+                Console.WriteLine($"Checking file: {content.Name}");
+                
+                if (content.Name.IndexOf(service, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    var rawContent = await client.Repository.Content.GetRawContent(owner, repo, content.Path);
 
-                // Convert byte array to string using UTF-8 encoding
-                string content = Encoding.UTF8.GetString(rawContent);
+                    // Convert byte array to string using UTF-8 encoding
+                    string contentText = Encoding.UTF8.GetString(rawContent);
 
-                return content;
+                    return contentText;
+                }
             }
 
             return $"Content not found for service: {service}";
         }
+
+
+
+
   
     }     
 }
