@@ -1,14 +1,11 @@
 ﻿using Azure;
 using Azure.AI.OpenAI;
 using DotNetEnv;
+using FuzzySharp;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
 using Octokit;
-using System;
-using System.Collections.Generic;
-using static System.Environment;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ThreatModelGPT
 {
@@ -113,53 +110,56 @@ namespace ThreatModelGPT
        public static async Task<List<string>> GenerateListOfServices(string text, string apiKey, string apiEndpoint)
         {
             string engine = "text-davinci-003";
-            List<string> recommendations = new List<string>(); // Initialize the list
+            List<string> recommendations = new List<string>(); 
             string prompt = $"Prompt 1: You are a Microsoft Azure security engineer doing threat model analysis to identify and mitigate risk. Given the following text:\n{text}\n please find the relevant Azure Services and print them out. \n";
-
 
             OpenAIClient client = new OpenAIClient(new Uri(apiEndpoint), new AzureKeyCredential(apiKey));
 
-                    Console.Write($"Input: {prompt}");
-                    CompletionsOptions completionsOptions = new CompletionsOptions();
-                    completionsOptions.Prompts.Add(prompt);
-                    completionsOptions.MaxTokens = 500;
-                    completionsOptions.Temperature = 0.2f;
+            // Prompt tuning parameters
+            Console.Write($"Input: {prompt}");
+            CompletionsOptions completionsOptions = new CompletionsOptions();
+            completionsOptions.Prompts.Add(prompt);
+            completionsOptions.MaxTokens = 500;
+            completionsOptions.Temperature = 0.2f;
 
-                    Response<Completions> completionsResponse = client.GetCompletions(engine, completionsOptions);
-                    string completion = completionsResponse.Value.Choices[0].Text;
-                    Console.WriteLine($"Chatbot: {completion}");
-                    recommendations.Add(completion); // Add the completion to the list
+            Response<Completions> completionsResponse = client.GetCompletions(engine, completionsOptions);
+            string completion = completionsResponse.Value.Choices[0].Text;
+            Console.WriteLine($"Chatbot: {completion}");
+            recommendations.Add(completion); // Add the completion to the list
 
-            return recommendations; // Return the list
+            return recommendations; 
         }
 
        public static async Task<List<string>> GenerateListOfSecurityRecommendations(string text, string apiKey, string apiEndpoint)
         {
-            string engine = "text-davinci-003";
-            List<string> recommendations = new List<string>(); // Initialize the list
-            string prompt = $"Prompt 2: You are a Microsoft Azure security engineer doing threat model analysis to identify and mitigate risk. Given the following text:\n{text}\n please find the appropriate actionable security practices tailored to each service mentioned in the text and give 4-5 mitigations for each service  \n";
+            string engine = "audreysmodel";
+            List<string> recommendations = new List<string>();
+            string prompt = $"Prompt 2: You are a Microsoft Azure security engineer doing threat model analysis to identify and mitigate risk. Given the following text:\n{text}\n please provide security recommendations tailored to each service mentioned in the text. Give 3-5 mitigations for each service  \n";
 
 
             OpenAIClient client = new OpenAIClient(new Uri(apiEndpoint), new AzureKeyCredential(apiKey));
 
-                    Console.Write($"Input: {prompt}");
-                    CompletionsOptions completionsOptions = new CompletionsOptions();
-                    completionsOptions.Prompts.Add(prompt);
-                    completionsOptions.MaxTokens = 1000;
-                    completionsOptions.Temperature = 0.1f;
+            // Prompt tuning parameters
+            Console.Write($"Input: {prompt}");
+            CompletionsOptions completionsOptions = new CompletionsOptions();
+            completionsOptions.Prompts.Add(prompt);
+            completionsOptions.MaxTokens = 2000;
+            completionsOptions.Temperature = 0.5f;
 
-                    Response<Completions> completionsResponse = client.GetCompletions(engine, completionsOptions);
-                    string completion = completionsResponse.Value.Choices[0].Text;
-                    Console.WriteLine($"Chatbot: {completion}");
-                    recommendations.Add(completion); // Add the completion to the list
+            Response<Completions> completionsResponse = client.GetCompletions(engine, completionsOptions);
+            string completion = completionsResponse.Value.Choices[0].Text;
+            Console.WriteLine($"Chatbot: {completion}");
+            recommendations.Add(completion); // Add the completion to the list
 
-            return recommendations; // Return the list
+            return recommendations;
         }
         static async Task<List<string>> GetSecurityBaselinesAsync(string services, string username, string personalAccessToken)
         {
             string owner = "MicrosoftDocs";
             string repo = "SecurityBenchmarks";
             string path = "Azure Offer Security Baselines/3.0";
+            string path2 = "Microsoft Cloud Security Benchmark/";
+            string path3 = "Azure Security Benchmark/3.0";
 
             var client = new GitHubClient(new ProductHeaderValue("MyApp"));
             var basicAuth = new Credentials(username, personalAccessToken); 
@@ -168,6 +168,7 @@ namespace ThreatModelGPT
             List<string> securityBaselines = new List<string>();
             string[] individualServices = services.Split(',').Select(s => s.Trim()).ToArray();
 
+            // Find a security baseline for each recommendation from the OpenAI API
             foreach (string individualService in individualServices)
             {
                 try
@@ -182,32 +183,62 @@ namespace ThreatModelGPT
                 }
             }
 
+            // Find the security baseline for the entire Azure Security Benchmark
+            try
+            {
+                string content = await GetFileContentAsync(client, owner, repo, path3, "Azure Security Benchmark");
+                securityBaselines.Add(content);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to fetch data for Azure Security Benchmark, Error: {ex.Message}");
+            }
+
+            // Find the security baseline for the entire Microsoft Cloud Security Benchmark
+            try
+            {
+                string content = await GetFileContentAsync(client, owner, repo, path2, "Microsoft_cloud_security_benchmark");
+                securityBaselines.Add(content);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to fetch data for Microsoft Cloud Security Benchmark, Error: {ex.Message}");
+            }
+
             return securityBaselines;
         }
                 
         static async Task<string> GetFileContentAsync(GitHubClient client, string owner, string repo, string path, string service)
         {
             var contents = await client.Repository.Content.GetAllContentsByRef(owner, repo, path, "master");
-            
-          //  Console.WriteLine($"Searching for service: {service}");
-            
+                        
             foreach (var content in contents)
             {
-               // Console.WriteLine($"Checking file: {content.Name}");
-
                 // Replace spaces with hyphens to match filename format
-                string formattedService = service.Replace(" ", "-");
+                string formattedService = service.Replace(" ", "-").Replace(".", "").ToLower();
                 
                 if (content.Name.IndexOf(formattedService, StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     // Construct the URL to the baseline file
-                    string baselineUrl = $" {service}  -   https://github.com/{owner}/{repo}/blob/master/{content.Path}";
+                    string baselineUrl = $" {service}: https://github.com/{owner}/{repo}/blob/master/{content.Path}";
 
                     return baselineUrl;
                 }
+                else
+                {
+                    // Use FuzzySharp to find a match
+                   // Console.WriteLine($"Fuzzy matching {content.Name} to {formattedService}");
+                   /* if(Fuzz.PartialRatio(content.Name, formattedService) >= 82)  // Adjust the threshold as needed
+                    {
+                        // Construct the URL to the baseline file
+                        string baselineUrl2 = $" {service}: https://github.com/{owner}/{repo}/blob/master/{content.Path}";
+                        Console.WriteLine("!!!!!!Baseline URL FROM FUZZZZZZZZZY: " + baselineUrl2);
+                        //return baselineUrl;
+                    } */
+                }
             }
 
-           // return $"Baseline not found for service: {service}";
+            // return empty string if the list isnt populated
            return "";
         }
     }

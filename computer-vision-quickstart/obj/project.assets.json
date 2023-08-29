@@ -56,6 +56,15 @@
           "lib/netstandard1.3/DotNetEnv.dll": {}
         }
       },
+      "FuzzySharp/2.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp2.1/FuzzySharp.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp2.1/FuzzySharp.dll": {}
+        }
+      },
       "FuzzyStringMatch/1.0.3": {
         "type": "package",
         "compile": {
@@ -1745,6 +1754,26 @@
         "dotnetenv.2.5.0.nupkg.sha512",
         "dotnetenv.nuspec",
         "lib/netstandard1.3/DotNetEnv.dll"
+      ]
+    },
+    "FuzzySharp/2.0.2": {
+      "sha512": "sBKqWxw3g//peYxDZ8JipRlyPbIyBtgzqBVA5GqwHVeqtIrw75maGXAllztf+1aJhchD+drcQIgf2mFho8ZV8A==",
+      "type": "package",
+      "path": "fuzzysharp/2.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "fuzzysharp.2.0.2.nupkg.sha512",
+        "fuzzysharp.nuspec",
+        "lib/net45/FuzzySharp.dll",
+        "lib/net46/FuzzySharp.dll",
+        "lib/net461/FuzzySharp.dll",
+        "lib/netcoreapp2.0/FuzzySharp.dll",
+        "lib/netcoreapp2.1/FuzzySharp.dll",
+        "lib/netstandard1.6/FuzzySharp.dll",
+        "lib/netstandard2.0/FuzzySharp.dll",
+        "lib/netstandard2.1/FuzzySharp.dll"
       ]
     },
     "FuzzyStringMatch/1.0.3": {
@@ -5489,6 +5518,7 @@
     "net7.0": [
       "Azure.AI.OpenAI >= 1.0.0-beta.6",
       "DotNetEnv >= 2.5.0",
+      "FuzzySharp >= 2.0.2",
       "FuzzyStringMatch >= 1.0.3",
       "Microsoft.Azure.CognitiveServices.Vision.ComputerVision >= 7.0.0",
       "Octokit >= 7.1.0",
@@ -5539,6 +5569,10 @@
           "DotNetEnv": {
             "target": "Package",
             "version": "[2.5.0, )"
+          },
+          "FuzzySharp": {
+            "target": "Package",
+            "version": "[2.0.2, )"
           },
           "FuzzyStringMatch": {
             "target": "Package",

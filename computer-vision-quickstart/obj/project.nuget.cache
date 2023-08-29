@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "HyYOWZgNam6So8AU002Fh2ALBWFiKQJVdMNiOb2p6gJ2mp1Hq/NddR/tKnS47mTyZa/PQrfEG9Jy/aUqO9xlgQ==",
+  "dgSpecHash": "fHVWc4Peg28XiRbI50IIoubGHtTOo1WclSQQUBsFi2ARQlmcryWztKKpZnO8xF39OSZHvSo3AftLkZk2dkb47Q==",
   "success": true,
   "projectFilePath": "C:\\Users\\aulong\\GitHub_Projects\\Threat-model-GPT\\computer-vision-quickstart\\computer-vision-quickstart.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\aulong\\.nuget\\packages\\azure.ai.openai\\1.0.0-beta.6\\azure.ai.openai.1.0.0-beta.6.nupkg.sha512",
     "C:\\Users\\aulong\\.nuget\\packages\\azure.core\\1.34.0\\azure.core.1.34.0.nupkg.sha512",
     "C:\\Users\\aulong\\.nuget\\packages\\dotnetenv\\2.5.0\\dotnetenv.2.5.0.nupkg.sha512",
+    "C:\\Users\\aulong\\.nuget\\packages\\fuzzysharp\\2.0.2\\fuzzysharp.2.0.2.nupkg.sha512",
     "C:\\Users\\aulong\\.nuget\\packages\\fuzzystringmatch\\1.0.3\\fuzzystringmatch.1.0.3.nupkg.sha512",
     "C:\\Users\\aulong\\.nuget\\packages\\microsoft.azure.cognitiveservices.vision.computervision\\7.0.0\\microsoft.azure.cognitiveservices.vision.computervision.7.0.0.nupkg.sha512",
     "C:\\Users\\aulong\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
