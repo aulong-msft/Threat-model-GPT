@@ -6043,7 +6043,8 @@
       "FuzzyStringMatch >= 1.0.3",
       "Microsoft.Azure.CognitiveServices.Vision.ComputerVision >= 7.0.0",
       "Octokit >= 7.1.0",
-      "OpenAI >= 1.7.2"
+      "OpenAI >= 1.7.2",
+      "System.Net.Http >= 4.3.4"
     ]
   },
   "packageFolders": {
@@ -6118,6 +6119,10 @@
           "OpenAI": {
             "target": "Package",
             "version": "[1.7.2, )"
+          },
+          "System.Net.Http": {
+            "target": "Package",
+            "version": "[4.3.4, )"
           }
         },
         "imports": [
@@ -6136,7 +6141,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
       }
     }
   },

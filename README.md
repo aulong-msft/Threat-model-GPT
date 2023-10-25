@@ -48,3 +48,5 @@ This project is licensed under the MIT License.
 This project is intended for educational and demonstration purposes only.
 Ensure that you follow best practices for managing API keys and tokens.
 For more detailed information about the code and its functionality, refer to the source code comments.
+
+To authorize the PAT token, go to "Develper Settings", generate the PAT token, then right click on the token and hit "Authorize" to the "microsoft" organization. this is to access the Microsoft cloud security bechmark repository.

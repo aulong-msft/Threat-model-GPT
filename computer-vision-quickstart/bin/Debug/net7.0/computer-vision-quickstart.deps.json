@@ -16,7 +16,8 @@
           "FuzzyStringMatch": "1.0.3",
           "Microsoft.Azure.CognitiveServices.Vision.ComputerVision": "7.0.0",
           "Octokit": "7.1.0",
-          "OpenAI": "1.7.2"
+          "OpenAI": "1.7.2",
+          "System.Net.Http": "4.3.4"
         },
         "runtime": {
           "computer-vision-quickstart.dll": {}
